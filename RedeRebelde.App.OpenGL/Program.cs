@@ -17,8 +17,8 @@ namespace RedeMyLittlePoney.App.OpenGL
             Application.ResultadoXOR = Algoritmo.algoritmoXor();
             Console.WriteLine(Application.ResultadoXOR); 
 #endif
-            Application.ResultadoRegressao = Algoritmo.algoritmoRegressao();
-            Console.WriteLine(Application.ResultadoRegressao);
+            //Application.ResultadoRegressao = Algoritmo.algoritmoRegressao();
+            //Console.WriteLine(Application.ResultadoRegressao);
 
             using (var game = new Game1())
                 game.Run();

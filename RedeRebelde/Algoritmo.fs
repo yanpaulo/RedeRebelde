@@ -41,10 +41,13 @@ module Algoritmo =
     let radial x u =
         (x: float Vector) |> ignore
         (u: float Vector) |> ignore
-        let termo = Distance.Euclidean(x, u) |> pow2 |> (*) -0.5
+        let termo = Distance.Euclidean(x, u) |> pow2
         
-        pow e termo
+        pow e -termo
     
+    let funcaoRegressao x =
+        3.0 * Math.Sin(x) + 1.0
+
     let saidaI c x =
         let s = c |> List.map (fun c -> radial x c)
         1.0 :: s |> vector

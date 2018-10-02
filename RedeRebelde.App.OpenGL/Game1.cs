@@ -54,7 +54,7 @@ namespace RedeMyLittlePoney.App.OpenGL
 #if !DISABLE_XOR
             LoadClassificacao(); 
 #endif
-            LoadRegressao();
+            //LoadRegressao();
 
             white = new Texture2D(GraphicsDevice, 1, 1);
             white.SetData(new[] { Color.White });
@@ -72,7 +72,7 @@ namespace RedeMyLittlePoney.App.OpenGL
                 .Range(0, 100)
                 .Select(n => new PointColor
                 {
-                    Point = new Point(n, (int)(Algoritmo.resultadoLinear(w, MVector.Build.Dense(new[] { n / 100.0 }))[0] * 10)),
+                    Point = new Point(n, (int)(Algoritmo.resultado(w, MVector.Build.Dense(new[] { n / 100.0 }))[0])),
                     Color = Color.Red
                 });
 
@@ -80,7 +80,7 @@ namespace RedeMyLittlePoney.App.OpenGL
                 .Range(0, 100)
                 .Select(n => new PointColor
                 {
-                    Point = new Point(n, (int)(Algoritmo.funcaoRegessao(n / 10.0) * 10)),
+                    Point = new Point(n, (int)(Algoritmo.funcaoRegressao(n / 10.0) * 10)),
                     Color = Color.Blue
                 });
         }
@@ -111,7 +111,7 @@ namespace RedeMyLittlePoney.App.OpenGL
                 .Select(p => new PointColor
                 {
                     Point = p,
-                    Color = cores.TryGetValue(Algoritmo.resultadoSigmoide(modelo, MVector.Build.Dense(new[] { p.X / 100.0d, p.Y / 100.0d })), out var v) ? v : Color.White
+                    Color = cores.TryGetValue(Algoritmo.resultado(modelo, MVector.Build.Dense(new[] { p.X / 100.0d, p.Y / 100.0d })), out var v) ? v : Color.White
                 })
                 .ToList();
 
@@ -174,23 +174,23 @@ namespace RedeMyLittlePoney.App.OpenGL
             spriteBatch.End(); 
 #endif
 
-            m = Matrix.CreateScale(2.0f) * Matrix.CreateTranslation(new Vector3(GraphicsDevice.Viewport.Bounds.Width / 2 - 100, 300.0f, 0.0f));
+            //m = Matrix.CreateScale(2.0f) * Matrix.CreateTranslation(new Vector3(GraphicsDevice.Viewport.Bounds.Width / 2 - 100, 300.0f, 0.0f));
 
-            spriteBatch.Begin(transformMatrix: m);
+            //spriteBatch.Begin(transformMatrix: m);
 
-            foreach (var cor in PontosFuncao)
-            {
-                var rect = new Rectangle(cor.Point.X - 2, cor.Point.Y - 2, 4, 4);
-                spriteBatch.Draw(white, cor.Point.ToVector2(), cor.Color);
-            }
+            //foreach (var cor in PontosFuncao)
+            //{
+            //    var rect = new Rectangle(cor.Point.X - 2, cor.Point.Y - 2, 4, 4);
+            //    spriteBatch.Draw(white, cor.Point.ToVector2(), cor.Color);
+            //}
 
-            foreach (var cor in PontosRegressao)
-            {
-                var rect = new Rectangle(cor.Point.X - 2, cor.Point.Y - 2, 4, 4);
-                spriteBatch.Draw(white, cor.Point.ToVector2(), cor.Color);
-            }
+            //foreach (var cor in PontosRegressao)
+            //{
+            //    var rect = new Rectangle(cor.Point.X - 2, cor.Point.Y - 2, 4, 4);
+            //    spriteBatch.Draw(white, cor.Point.ToVector2(), cor.Color);
+            //}
 
-            spriteBatch.End();
+            //spriteBatch.End();
 
             base.Draw(gameTime);
         }
