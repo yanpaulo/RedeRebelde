@@ -18,7 +18,7 @@ module AlgoritmoClassificacao =
     type Parametros = { NumeroNeuronios: int; Precisao: float }
     //Saída de uma realização
     type Realizacao = { TaxaAcerto:float; Confusao: float Matrix; Parametros: Parametros; W: Modelo }
-    //Resultado do algoritmo
+    //Resultado do algoritmo para Classificação
     type Resultado = { Acuracia: float; DesvioPadrao: float; Melhor: Realizacao; }
     
     
@@ -59,7 +59,8 @@ module AlgoritmoClassificacao =
     let realizacao dados classes neuronios =
         let numClasses = classes |> List.length        
         let confusao = DenseMatrix.zero numClasses numClasses
-    
+        
+        let sw = new Stopwatch()
         sw.Start()
         let parametros = ajusteGrid dados numClasses neuronios
         sw.Stop()
@@ -91,8 +92,9 @@ module AlgoritmoClassificacao =
     let algoritmo dados classes neuronios = 
         (dados: Par list) |> ignore
         let numClasses = classes |> List.length
-        
-        sw.Restart()
+
+        let sw = new Stopwatch()
+        sw.Start()
         printf "Fazendo realizacoes... "
         
         let map _ = 

@@ -80,7 +80,7 @@ namespace RedeRebelde.App.OpenGL
                 .Range(0, 500)
                 .Select(n => new PointColor
                 {
-                    Point = new Point(n, (int)(Algoritmo.funcaoRegressao(n / 10.0))),
+                    Point = new Point(n, (int)(AlgoritmoRegressao.funcao(n / 10.0))),
                     Color = Color.Blue
                 });
         }

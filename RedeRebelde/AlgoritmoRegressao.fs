@@ -21,6 +21,9 @@ module AlgoritmoRegressao =
     //Resultado do algoritmo para Regressão
     type Resultado = { RMSE: float; DesvioPadrao: float; Melhor: Realizacao; }
     
+    let funcao x =
+        3.0 * Math.Sin(x) + 1.0
+    
     //Precisão via validação cruzada para quantidade de neurônios X taxa de ajute
     let mseGrid dados numNeuronios   = 
         (dados: Par list) |> ignore
@@ -51,6 +54,7 @@ module AlgoritmoRegressao =
         neuronios |> PSeq.map map |> PSeq.minBy (fun r -> r.MSE)
     
     let realizacao dados neuronios =
+        let sw = new Stopwatch()
         sw.Start()
         let parametros = ajusteGrid dados neuronios
         sw.Stop()
@@ -76,7 +80,8 @@ module AlgoritmoRegressao =
     let algoritmo dados neuronios = 
         (dados: Par list) |> ignore
         
-        sw.Restart()
+        let sw = new Stopwatch()
+        sw.Start()
         printf "Fazendo realizacoes... "
         
         let map _ = 
@@ -108,7 +113,7 @@ module AlgoritmoRegressao =
         let max = 50.0
         let dados = [0.0..inc..max]
         let map x =
-            let y = funcaoRegressao x
+            let y = funcao x
             //let x = x / max 
             { X = [x] |> vector; Y = [y] |> vector }
 

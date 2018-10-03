@@ -3,12 +3,9 @@
 open System
 open System.Diagnostics
 
-open FSharp.Data
 open MathNet.Numerics
 open MathNet.Numerics.Random
 open MathNet.Numerics.LinearAlgebra
-open MathNet.Numerics.Statistics
-open FSharp.Collections.ParallelSeq
 
 module Algoritmo =
     //Tipos
@@ -26,16 +23,14 @@ module Algoritmo =
     let e = Math.E
 
     //Funções
+    //Função radial com vetores x e centro como parâmetros
     let radial x u =
         (x: float Vector) |> ignore
-        (u: float Vector) |> ignore
         let termo = Distance.Euclidean(x, u) |> pow2
         
         pow e -termo
     
-    let funcaoRegressao x =
-        3.0 * Math.Sin(x) + 1.0
-
+    //Saída da camada oculta
     let saidaI c x =
         let s = c |> List.map (fun c -> radial x c)
         1.0 :: s |> vector
@@ -50,13 +45,8 @@ module Algoritmo =
     //Normalização
     let normaliza x min max =
         (x: float) |> ignore
-        (min: float) |> ignore
-        (max: float) |> ignore
 
         (x - min) / (max - min)
-    
-    //Contador de tempo para medição de performance.
-    let sw = new Stopwatch();
     
     //Próximo modelo de pesos a lista "dados" de pares
     let pesos dados numNeuronios  =
