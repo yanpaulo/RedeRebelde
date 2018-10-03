@@ -72,6 +72,7 @@
     </None>
     <Content Include="packages.config" />
     <Compile Include="Algoritmo.fs" />
+    <Compile Include="DadosXor.fs" />
     <Compile Include="AlgoritmoClassificacao.fs" />
     <Compile Include="AlgoritmoRegressao.fs" />
   </ItemGroup>

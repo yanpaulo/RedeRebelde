@@ -88,8 +88,8 @@ namespace RedeMyLittlePoney.App.OpenGL
         private void LoadClassificacao()
         {
             var modelo = Application.ResultadoXOR.Melhor.W;
-            var classes = new List<MVector>(AlgoritmoClassificacao.classesXorSeq);
-            var dados = new List<AlgoritmoClassificacao.Par>(AlgoritmoClassificacao.dadosXorSeq);
+            var classes = new List<MVector>(DadosXor.classesSeq);
+            var dados = new List<Algoritmo.Par>(DadosXor.dadosSeq);
 
             var cores = new Dictionary<MVector, Color>
             {
@@ -111,7 +111,7 @@ namespace RedeMyLittlePoney.App.OpenGL
                 .Select(p => new PointColor
                 {
                     Point = p,
-                    Color = cores.TryGetValue(AlgoritmoClassificacao.resultado(modelo, MVector.Build.Dense(new[] { p.X / 100.0d, p.Y / 100.0d })), out var v) ? v : Color.White
+                    Color = cores.TryGetValue(Algoritmo.resultado(modelo, MVector.Build.Dense(new[] { p.X / 100.0d, p.Y / 100.0d })), out var v) ? v : Color.White
                 })
                 .ToList();
 

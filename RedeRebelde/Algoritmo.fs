@@ -49,6 +49,10 @@ module Algoritmo =
     
     //Normalização
     let normaliza x min max =
+        (x: float) |> ignore
+        (min: float) |> ignore
+        (max: float) |> ignore
+
         (x - min) / (max - min)
     
     //Contador de tempo para medição de performance.

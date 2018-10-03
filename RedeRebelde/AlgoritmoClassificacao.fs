@@ -4,6 +4,7 @@ open System
 open System.Diagnostics
 open System.Collections.Generic
 
+open Algoritmo
 open FSharp.Data
 open MathNet.Numerics
 open MathNet.Numerics.Random
@@ -12,86 +13,16 @@ open MathNet.Numerics.Statistics
 open FSharp.Collections.ParallelSeq
 
 module AlgoritmoClassificacao =
-
-    //Tipos
     
-    //Par de Entrada X e saída desejada Y
-    type Par = { X: float Vector; Y: float Vector }
-    //Modelo contendo as listas de neurônios I (camada oculta) e J (camada de saída)
-    type Modelo = { C: float Vector list; W: float Matrix }
-    //Parâmetros de entrada para a realização do algoritmo
-    type Entrada = { Dados: Par list; Classes: Vector<float> list; NumeroNeuronios: float }
     //Saída de uma realização
-    type RealizacaoClassificacao = { TaxaAcerto:float; Confusao: float Matrix; W: Modelo }
-    //Saída uma realização para Regressão
-    type RealizacaoRegressao = { RMSE :float; W: Modelo }
+    type Realizacao = { TaxaAcerto:float; Confusao: float Matrix; W: Modelo }
     //Resultado do algoritmo para CLassificação1
-    type ResultadoClassificacao = { Acuracia: float; DesvioPadrao: float; Melhor: RealizacaoClassificacao; }
-    //Resultado do algoritmo para Regressão
-    type ResultadoRegressao = { RMSE: float; DesvioPadrao: float; Melhor: RealizacaoRegressao; }
+    type Resultado = { Acuracia: float; DesvioPadrao: float; Melhor: Realizacao; }
     //Resultado da Busca em Grade
     type ResultadoParametros = { NumeroNeuronios: int; Precisao: float }
     
-    let rng = Random.shared
-    let pow x n = Math.Pow(x, n)
-    let pow2 x = x * x
-    let e = Math.E
-
-    //Funções
-    let radial x u =
-        (x: float Vector) |> ignore
-        (u: float Vector) |> ignore
-        let termo = Distance.Euclidean(x, u) |> pow2
-        
-        pow e -termo
-    
-    let funcaoRegressao x =
-        3.0 * Math.Sin(x) + 1.0
-
-    let saidaI c x =
-        let s = c |> List.map (fun c -> radial x c)
-        1.0 :: s |> vector
-
-    //Resultado para entrada x na rede
-    let resultado m x =
-        let x = saidaI m.C x
-        let res = m.W * x
-        res.Map(fun v -> Math.Round(v))
-        
-    
-    //Normalização
-    let normaliza x min max =
-        (x - min) / (max - min)
-    
-    //Contador de tempo para medição de performance.
-    let sw = new Stopwatch();
-    
-    //Próximo modelo para o vetor "dados"
-    //Implementação back-propagation com tail-recursion
-    let pesos dados numSaidas numNeuronios  =
-        (dados: Par list) |> ignore
-        
-        //Próximo modelo (função w(n+1))
-        let pesos c = 
-            let X = dados |> List.map (fun p -> saidaI c p.X) |> Matrix.Build.DenseOfColumnVectors
-            let Y = dados |> List.map (fun p -> p.Y) |> Matrix.Build.DenseOfColumnVectors
-            
-            //let W = Y * ((X.Transpose() * X).Inverse() * X.Transpose())
-            let W = Y * X.PseudoInverse()
-
-            { C = c; W = W }
-     
-        let c = 
-            dados.SelectPermutation() |> 
-            Seq.take numNeuronios |> 
-            Seq.map(fun p -> p.X) |> 
-            List.ofSeq
-
-        pesos c
-
-    
     //Precisão via validação cruzada para quantidade de neurônios X taxa de ajute
-    let precisao dados numSaidas numNeuronios   = 
+    let precisao dados numNeuronios   = 
         (dados: Par list) |> ignore
         let secoes = 5
         let tamanhoSecao = dados.Length / secoes
@@ -104,7 +35,7 @@ module AlgoritmoClassificacao =
             let treinamento = head @ tail
             let teste = secao
 
-            let m = pesos treinamento numSaidas numNeuronios 
+            let m = pesos treinamento numNeuronios 
             let acertos = 
                 teste |> 
                 List.map (fun t -> resultado m t.X = t.Y) |>
@@ -118,7 +49,7 @@ module AlgoritmoClassificacao =
     //Busca em grade de quantidade de neurônios X taxa de ajuste
     let ajusteGrid dados numSaidas neuronios = 
         let map n =
-            let precisao = precisao dados numSaidas n 
+            let precisao = precisao dados n 
             let mapping = { NumeroNeuronios = n; Precisao = precisao }
             mapping
             
@@ -139,7 +70,7 @@ module AlgoritmoClassificacao =
 
         let teste = dados |> List.except treinamento
 
-        let w = pesos treinamento numClasses parametros.NumeroNeuronios
+        let w = pesos treinamento parametros.NumeroNeuronios
         
         let iter par =
             let y = resultado w par.X
@@ -225,7 +156,7 @@ module AlgoritmoClassificacao =
 
         algoritmo dados classes neuronios
 
-    let algoritmoIris () =
+    let iris () =
         printfn "Iris"
         let db = CsvFile.Load("iris.data").Cache()
         let classes = Map.ofList [("Iris-setosa", vector [1.0; 0.0; 0.0]); ("Iris-versicolor", vector [0.0; 1.0; 0.0]); ("Iris-virginica", vector [0.0; 0.0; 1.0])]
@@ -234,7 +165,7 @@ module AlgoritmoClassificacao =
 
         algoritmoCSV db classes 4 neuronios
 
-    let algoritmoColuna () =
+    let coluna () =
         printfn "Coluna Terbreval"
         let db = CsvFile.Load("column_3C.dat", " ").Cache()
         let classes = Map.ofList [("DH", vector [1.0; 0.0; 0.0]); ("SL", vector [0.0; 1.0; 0.0]); "NO", (vector [0.0; 0.0; 1.0])]
@@ -269,48 +200,10 @@ module AlgoritmoClassificacao =
 
         algoritmoCSV db classes 10 neuronios
     
-    let classesXor = [ vector [1.0; 0.0]; vector [0.0; 1.0]]
-
-    let dadosXor = 
-        let range min max n =
-            let range = max - min
-            n * range + min
-        
-        let mapV (x, y) = 
-            vector [x; y]
-
-        let x1 = Random.doubles 50 |> Seq.map (range 0.0 0.5)
-        let y1 = Random.doubles 50 |> Seq.map (range 0.0 0.5)
-        let q1 = Seq.zip x1 y1 |> Seq.map mapV |> List.ofSeq
-
-        let x2 = Random.doubles 50 |> Seq.map (range 0.5 1.0)
-        let y2 = Random.doubles 50 |> Seq.map (range 0.0 0.5)
-        let q2 = Seq.zip x2 y2 |> Seq.map mapV |> List.ofSeq
-
-        let x3 = Random.doubles 50 |> Seq.map (range 0.0 0.5)
-        let y3 = Random.doubles 50 |> Seq.map (range 0.5 1.0)
-        let q3 = Seq.zip x3 y3 |> Seq.map mapV |> List.ofSeq
-        
-        let x4 = Random.doubles 50 |> Seq.map (range 0.5 1.0)
-        let y4 = Random.doubles 50 |> Seq.map (range 0.5 1.0)
-        let q4 = Seq.zip x4 y4 |> Seq.map mapV |> List.ofSeq
-
-        let mapClass index c =
-            {X = c; Y = classesXor.[index]}
-
-        let classe1 = q1 @ q4 |> List.map (mapClass 0)
-        let classe2 = q2 @ q3 |> List.map (mapClass 1)
-        let dados = classe1 @ classe2
-        dados
-    
-    let classesXorSeq = classesXor |> seq
-
-    let dadosXorSeq = dadosXor |> seq
-
-    let algoritmoXor () =
+    let xor () =
         printfn "XOR"
         
         let neuronios = [8 .. 10]
 
-        algoritmo dadosXor classesXor neuronios
+        algoritmo DadosXor.dados DadosXor.classes neuronios
     

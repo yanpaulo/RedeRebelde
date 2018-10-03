@@ -8,7 +8,7 @@ namespace RedeMyLittlePoney.App.OpenGL
 {
     public class Application
     {
-        public static AlgoritmoClassificacao.ResultadoClassificacao ResultadoXOR { get; set; }
+        public static AlgoritmoClassificacao.Resultado ResultadoXOR { get; set; }
         public static AlgoritmoRegressao.Resultado ResultadoRegressao { get; set; }
     }
 }

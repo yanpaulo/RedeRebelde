@@ -14,7 +14,7 @@ namespace RedeMyLittlePoney.App.OpenGL
         static void Main()
         {
 #if !DISABLE_XOR
-            Application.ResultadoXOR = AlgoritmoClassificacao.algoritmoXor();
+            Application.ResultadoXOR = AlgoritmoClassificacao.xor();
             Console.WriteLine(Application.ResultadoXOR);
 #endif
             Application.ResultadoRegressao = AlgoritmoRegressao.resultado();
