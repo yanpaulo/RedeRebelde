@@ -1,4 +1,4 @@
-﻿namespace RedeMyLittlePoney.App.Custom.AssemblyInfo
+﻿namespace RedeRebelde.App.Custom.AssemblyInfo
 
 open System.Reflection
 open System.Runtime.CompilerServices

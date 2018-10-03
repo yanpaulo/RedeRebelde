@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("RedeMyLittlePoney.App.OpenGL")]
-[assembly: AssemblyProduct("RedeMyLittlePoney.App.OpenGL")]
+[assembly: AssemblyTitle("RedeRebelde.App.OpenGL")]
+[assembly: AssemblyProduct("RedeRebelde.App.OpenGL")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("")]

@@ -1,4 +1,4 @@
-﻿namespace RedeMyLittlePoney
+﻿namespace RedeRebelde
 
 open System
 open System.Diagnostics

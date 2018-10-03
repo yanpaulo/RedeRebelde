@@ -9,8 +9,8 @@
     <ProjectGuid>{43C31DA2-CF66-40AB-B0FF-B440BC7BB117}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RedeMyLittlePoney.App.OpenGL</RootNamespace>
-    <AssemblyName>RedeMyLittlePoney.App.OpenGL</AssemblyName>
+    <RootNamespace>RedeRebelde.App.OpenGL</RootNamespace>
+    <AssemblyName>RedeRebelde.App.OpenGL</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>

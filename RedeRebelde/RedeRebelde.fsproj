@@ -8,7 +8,7 @@
     <ProjectGuid>68aa8df3-109e-4681-9d93-6a70d229d101</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>RedeAmarildo</RootNamespace>
-    <AssemblyName>RedeAmarildo</AssemblyName>
+    <AssemblyName>RedeRebelde</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <UseStandardResourceNames>true</UseStandardResourceNames>

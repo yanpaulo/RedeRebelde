@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RedeMyLittlePoney.App.OpenGL
+namespace RedeRebelde.App.OpenGL
 {
     class PointColor
     {
