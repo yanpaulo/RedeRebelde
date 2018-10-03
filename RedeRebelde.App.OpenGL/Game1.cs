@@ -52,9 +52,9 @@ namespace RedeMyLittlePoney.App.OpenGL
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 #if !DISABLE_XOR
-            LoadClassificacao(); 
+            LoadClassificacao();
 #endif
-            //LoadRegressao();
+            LoadRegressao();
 
             white = new Texture2D(GraphicsDevice, 1, 1);
             white.SetData(new[] { Color.White });
@@ -69,18 +69,18 @@ namespace RedeMyLittlePoney.App.OpenGL
             var w = Application.ResultadoRegressao.Melhor.W;
 
             PontosRegressao = Enumerable
-                .Range(0, 100)
+                .Range(0, 500)
                 .Select(n => new PointColor
                 {
-                    Point = new Point(n, (int)(Algoritmo.resultado(w, MVector.Build.Dense(new[] { n / 100.0 }))[0])),
+                    Point = new Point(n, (int)(Algoritmo.resultado(w, MVector.Build.Dense(new[] { n / 10.0 }))[0])),
                     Color = Color.Red
                 });
 
             PontosFuncao = Enumerable
-                .Range(0, 100)
+                .Range(0, 500)
                 .Select(n => new PointColor
                 {
-                    Point = new Point(n, (int)(Algoritmo.funcaoRegressao(n / 10.0) * 10)),
+                    Point = new Point(n, (int)(Algoritmo.funcaoRegressao(n / 10.0))),
                     Color = Color.Blue
                 });
         }
@@ -88,8 +88,8 @@ namespace RedeMyLittlePoney.App.OpenGL
         private void LoadClassificacao()
         {
             var modelo = Application.ResultadoXOR.Melhor.W;
-            var classes = new List<MVector>(Algoritmo.classesXorSeq);
-            var dados = new List<Algoritmo.Par>(Algoritmo.dadosXorSeq);
+            var classes = new List<MVector>(AlgoritmoClassificacao.classesXorSeq);
+            var dados = new List<AlgoritmoClassificacao.Par>(AlgoritmoClassificacao.dadosXorSeq);
 
             var cores = new Dictionary<MVector, Color>
             {
@@ -111,7 +111,7 @@ namespace RedeMyLittlePoney.App.OpenGL
                 .Select(p => new PointColor
                 {
                     Point = p,
-                    Color = cores.TryGetValue(Algoritmo.resultado(modelo, MVector.Build.Dense(new[] { p.X / 100.0d, p.Y / 100.0d })), out var v) ? v : Color.White
+                    Color = cores.TryGetValue(AlgoritmoClassificacao.resultado(modelo, MVector.Build.Dense(new[] { p.X / 100.0d, p.Y / 100.0d })), out var v) ? v : Color.White
                 })
                 .ToList();
 
@@ -171,26 +171,26 @@ namespace RedeMyLittlePoney.App.OpenGL
                 var rect = new Rectangle(cor.Point.X - 2, cor.Point.Y - 2, 4, 4);
                 spriteBatch.Draw(white, cor.Point.ToVector2(), cor.Color);
             }
-            spriteBatch.End(); 
+            spriteBatch.End();
 #endif
+            
+            m = Matrix.CreateScale(0.5f, 5.0f, 0.0f) * Matrix.CreateTranslation(new Vector3(GraphicsDevice.Viewport.Bounds.Width / 2 - 100, 300.0f, 0.0f));
 
-            //m = Matrix.CreateScale(2.0f) * Matrix.CreateTranslation(new Vector3(GraphicsDevice.Viewport.Bounds.Width / 2 - 100, 300.0f, 0.0f));
+            spriteBatch.Begin(transformMatrix: m);
 
-            //spriteBatch.Begin(transformMatrix: m);
+            foreach (var cor in PontosFuncao)
+            {
+                var rect = new Rectangle(cor.Point.X - 2, cor.Point.Y - 2, 4, 4);
+                spriteBatch.Draw(white, cor.Point.ToVector2(), cor.Color);
+            }
 
-            //foreach (var cor in PontosFuncao)
-            //{
-            //    var rect = new Rectangle(cor.Point.X - 2, cor.Point.Y - 2, 4, 4);
-            //    spriteBatch.Draw(white, cor.Point.ToVector2(), cor.Color);
-            //}
+            foreach (var cor in PontosRegressao)
+            {
+                var rect = new Rectangle(cor.Point.X - 2, cor.Point.Y - 2, 4, 4);
+                spriteBatch.Draw(white, cor.Point.ToVector2(), cor.Color);
+            }
 
-            //foreach (var cor in PontosRegressao)
-            //{
-            //    var rect = new Rectangle(cor.Point.X - 2, cor.Point.Y - 2, 4, 4);
-            //    spriteBatch.Draw(white, cor.Point.ToVector2(), cor.Color);
-            //}
-
-            //spriteBatch.End();
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

@@ -57,7 +57,6 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Algoritmo.fs" />
     <None Include="App.config" />
     <None Include="iris.data">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -72,6 +71,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Include="packages.config" />
+    <Compile Include="Algoritmo.fs" />
+    <Compile Include="AlgoritmoClassificacao.fs" />
+    <Compile Include="AlgoritmoRegressao.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Collections.ParallelSeq">

@@ -14,11 +14,11 @@ namespace RedeMyLittlePoney.App.OpenGL
         static void Main()
         {
 #if !DISABLE_XOR
-            Application.ResultadoXOR = Algoritmo.algoritmoXor();
-            Console.WriteLine(Application.ResultadoXOR); 
+            Application.ResultadoXOR = AlgoritmoClassificacao.algoritmoXor();
+            Console.WriteLine(Application.ResultadoXOR);
 #endif
-            //Application.ResultadoRegressao = Algoritmo.algoritmoRegressao();
-            //Console.WriteLine(Application.ResultadoRegressao);
+            Application.ResultadoRegressao = AlgoritmoRegressao.resultado();
+            Console.WriteLine(Application.ResultadoRegressao);
 
             using (var game = new Game1())
                 game.Run();
