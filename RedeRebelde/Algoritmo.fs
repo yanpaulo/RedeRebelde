@@ -58,8 +58,7 @@ module Algoritmo =
     //Contador de tempo para medição de performance.
     let sw = new Stopwatch();
     
-    //Próximo modelo para o vetor "dados"
-    //Implementação back-propagation com tail-recursion
+    //Próximo modelo de pesos a lista "dados" de pares
     let pesos dados numNeuronios  =
         (dados: Par list) |> ignore
         

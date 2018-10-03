@@ -14,14 +14,15 @@ open FSharp.Collections.ParallelSeq
 
 module AlgoritmoClassificacao =
     
-    //Saída de uma realização
-    type Realizacao = { TaxaAcerto:float; Confusao: float Matrix; W: Modelo }
-    //Resultado do algoritmo para CLassificação1
-    type Resultado = { Acuracia: float; DesvioPadrao: float; Melhor: Realizacao; }
     //Resultado da Busca em Grade
-    type ResultadoParametros = { NumeroNeuronios: int; Precisao: float }
+    type Parametros = { NumeroNeuronios: int; Precisao: float }
+    //Saída de uma realização
+    type Realizacao = { TaxaAcerto:float; Confusao: float Matrix; Parametros: Parametros; W: Modelo }
+    //Resultado do algoritmo
+    type Resultado = { Acuracia: float; DesvioPadrao: float; Melhor: Realizacao; }
     
-    //Precisão via validação cruzada para quantidade de neurônios X taxa de ajute
+    
+    //Precisão via validação cruzada para quantidade de neurônios
     let precisao dados numNeuronios   = 
         (dados: Par list) |> ignore
         let secoes = 5
@@ -46,7 +47,7 @@ module AlgoritmoClassificacao =
 
         [0 .. (secoes - 1)] |> List.map precisaoSecao |> List.average
     
-    //Busca em grade de quantidade de neurônios X taxa de ajuste
+    //Busca em grade de quantidade de neurônios
     let ajusteGrid dados numSaidas neuronios = 
         let map n =
             let precisao = precisao dados n 
@@ -62,7 +63,7 @@ module AlgoritmoClassificacao =
         sw.Start()
         let parametros = ajusteGrid dados numClasses neuronios
         sw.Stop()
-        printfn "\nParametros escolhidos: \n%A \n(%A)\n" parametros sw.Elapsed
+        printfn "\n%A\n(%A)" parametros sw.Elapsed
 
         let treinamento = 
             let n = dados |> List.length |> float |> (*) 0.8 |> int
@@ -84,7 +85,7 @@ module AlgoritmoClassificacao =
 
         teste |> Seq.iter iter
         
-        { TaxaAcerto = confusao.Diagonal().Sum() / float (teste |> Seq.length) ; Confusao = confusao; W = w }
+        { TaxaAcerto = confusao.Diagonal().Sum() / float (teste |> Seq.length) ; Confusao = confusao; W = w; Parametros = parametros }
     
     //Faz 20 realizações e computa a acurácia, desvio padrão e melhor realização.
     let algoritmo dados classes neuronios = 
@@ -155,6 +156,15 @@ module AlgoritmoClassificacao =
 
 
         algoritmo dados classes neuronios
+        
+    let classesMap list = 
+        let num = list |> List.length
+        let gen index n = 
+            let head = List.init (index) (fun _ -> 0.0)
+            let tail = List.init (num - head.Length - 1) (fun _ -> 0.0)
+            let v = head @ [1.0] @ tail |> vector
+            (n.ToString(), v)
+        list |> List.mapi gen |> Map.ofList
 
     let iris () =
         printfn "Iris"
@@ -172,17 +182,8 @@ module AlgoritmoClassificacao =
         let neuronios = [4 .. 10]
 
         algoritmoCSV db classes 6 neuronios
-    
-    let classesMap list = 
-        let num = list |> List.length
-        let gen index n = 
-            let head = List.init (index) (fun _ -> 0.0)
-            let tail = List.init (num - head.Length - 1) (fun _ -> 0.0)
-            let v = head @ [1.0] @ tail |> vector
-            (n.ToString(), v)
-        list |> List.mapi gen |> Map.ofList
         
-    let algoritmoDermatologia () =
+    let dermatologia () =
         printfn "Dermatologia"
         let db = CsvFile.Load("dermatology.data").Cache()
         
@@ -191,7 +192,7 @@ module AlgoritmoClassificacao =
 
         algoritmoCSV db classes 34 neuronios
 
-    let algoritmoCancer () =
+    let cancer () =
         printfn "Câncer de Mama"
         let db = CsvFile.Load("breast-cancer-wisconsin.data").Cache()
         

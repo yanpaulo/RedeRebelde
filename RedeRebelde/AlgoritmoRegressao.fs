@@ -14,12 +14,12 @@ open FSharp.Collections.ParallelSeq
 module AlgoritmoRegressao =
     
     //Tipos
+    //Resultado da Busca em Grade
+    type Parametros = { NumeroNeuronios: int; MSE: float }
     //Saída de uma realização
-    type Realizacao = { RMSE :float; W: Modelo }
+    type Realizacao = { RMSE: float; Parametros: Parametros; W: Modelo }
     //Resultado do algoritmo para Regressão
     type Resultado = { RMSE: float; DesvioPadrao: float; Melhor: Realizacao; }
-    //Resultado da Busca em Grade
-    type ResultadoParametros = { NumeroNeuronios: int; MSE: float }
     
     //Precisão via validação cruzada para quantidade de neurônios X taxa de ajute
     let mseGrid dados numNeuronios   = 
@@ -54,7 +54,7 @@ module AlgoritmoRegressao =
         sw.Start()
         let parametros = ajusteGrid dados neuronios
         sw.Stop()
-        printfn "\nParametros escolhidos: \n%A \n(%A)\n" parametros sw.Elapsed
+        printfn "\n%A\n(%A)" parametros sw.Elapsed
 
         let treinamento = 
             let n = dados |> List.length |> float |> (*) 0.8 |> int
@@ -70,7 +70,7 @@ module AlgoritmoRegressao =
 
         let rmse = teste |> List.map map |> List.average |> Math.Sqrt
         
-        { RMSE = rmse; W = w }
+        { RMSE = rmse; W = w; Parametros = parametros }
     
     //Faz 20 realizações e computa a acurácia, desvio padrão e melhor realização.
     let algoritmo dados neuronios = 
@@ -114,7 +114,7 @@ module AlgoritmoRegressao =
 
         let dados = dados |> List.map map
 
-        let neuronios = [5..10]
+        let neuronios = [10..20]
         let resultado = algoritmo dados neuronios
 
         resultado

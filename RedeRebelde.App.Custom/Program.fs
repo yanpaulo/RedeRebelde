@@ -5,5 +5,9 @@
 module Application =
     [<EntryPoint>]
     let main argv = 
-        printfn "%A" (AlgoritmoRegressao.resultado ())
+        printfn "%A" (AlgoritmoClassificacao.iris ())
+        printfn "%A" (AlgoritmoClassificacao.coluna ())
+        printfn "%A" (AlgoritmoClassificacao.dermatologia ())
+        printfn "%A" (AlgoritmoClassificacao.cancer ())
+        printfn "%A" (AlgoritmoClassificacao.xor ())
         0 // retornar um código de saída inteiro
